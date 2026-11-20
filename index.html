@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rise Star of IndiaFirst Life</title>
+<style>
+:root{--bg:#0b1020;--card:#151c36;--card2:#1c2547;--tx:#eef1ff;--mut:#9aa4cf;--gold:#ffc83d;--pink:#ff4d8d;--green:#19d38a;--bd:#2a3562}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at 20% 0,#2b1a5c 0,var(--bg) 45%);color:var(--tx);min-height:100vh;padding-bottom:90px}
+header{text-align:center;padding:26px 16px 14px}
+h1{font-size:clamp(26px,7vw,40px);font-weight:900;letter-spacing:.5px;background:linear-gradient(90deg,var(--gold),var(--pink),#7c5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1 span{-webkit-text-fill-color:initial}
+.sub{color:var(--mut);font-size:13px;margin-top:4px;letter-spacing:2px;text-transform:uppercase}
+.wrap{max-width:900px;margin:0 auto;padding:0 12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 4px;text-align:center}
+.stat b{display:block;font-size:20px;color:var(--gold)}
+.stat small{font-size:10px;color:var(--mut)}
+.tools{position:sticky;top:0;z-index:5;background:rgba(11,16,32,.92);backdrop-filter:blur(8px);padding:8px 0}
+input[type=search]{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font-size:16px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px}
+.chip{flex:none;padding:6px 12px;border-radius:20px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font-size:13px;cursor:pointer}
+.chip.on{background:linear-gradient(90deg,var(--pink),#7c5cff);color:#fff;border-color:transparent}
+.card{background:linear-gradient(145deg,var(--card),var(--card2));border:1px solid var(--bd);border-left:4px solid var(--gold);border-radius:16px;padding:14px;margin:12px 0;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.card.s-Call-Connected{border-left-color:#4da3ff}.card.s-Will-Join{border-left-color:var(--green)}.card.s-Not-Interested{border-left-color:#ff6b6b}.card.s-Call-Disconnected{border-left-color:#999}
+.top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.nm{font-size:17px;font-weight:800;text-transform:capitalize}
+.code{font-size:12px;color:var(--gold);font-weight:700;margin-top:2px}
+.vin{background:#2b3566;border-radius:10px;padding:4px 9px;font-size:12px;white-space:nowrap}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin:10px 0;font-size:13px}
+.grid small{display:block;color:var(--mut);font-size:10px;text-transform:uppercase;letter-spacing:1px}
+.act{display:flex;gap:8px;align-items:center}
+.call{flex:none;display:flex;align-items:center;gap:6px;background:linear-gradient(90deg,#10c97d,#0aa968);color:#fff;text-decoration:none;font-weight:800;padding:12px 16px;border-radius:12px;font-size:15px;box-shadow:0 4px 12px rgba(25,211,138,.4)}
+.call:active{transform:scale(.96)}
+select{flex:1;min-width:0;padding:12px 8px;border-radius:12px;border:1px solid var(--bd);background:#0f1530;color:var(--tx);font-size:15px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(11,16,32,.96);border-top:1px solid var(--bd);padding:10px 12px;display:flex;gap:8px;justify-content:center;z-index:9}
+.btn{flex:1;max-width:260px;padding:14px;border:0;border-radius:14px;font-weight:900;font-size:16px;color:#1a1200;background:linear-gradient(90deg,var(--gold),#ff9f43);cursor:pointer}
+.btn.alt{background:var(--card2);color:var(--tx);border:1px solid var(--bd);flex:.6}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--green);color:#012;padding:10px 18px;border-radius:20px;font-weight:800;opacity:0;transition:.3s;pointer-events:none;z-index:10}
+.toast.show{opacity:1}
+.empty{text-align:center;color:var(--mut);padding:30px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌟 Rise Star of IndiaFirst Life 🌟</h1>
+  <div class="sub">Advisor Connect &amp; Follow-up</div>
+</header>
+<div class="wrap">
+  <div class="stats" id="stats"></div>
+  <div class="tools">
+    <input type="search" id="q" placeholder="🔍 Search name, code, mentor, BDM, mobile">
+    <div class="chips" id="chips"></div>
+  </div>
+  <div id="list"></div>
+</div>
+<div class="bar">
+  <button class="btn" id="save">💾 Save All Remarks</button>
+  <button class="btn alt" id="csv">⬇ Export CSV</button>
+</div>
+<div class="toast" id="toast">Remarks saved ✔</div>
+
+<script>
+const RAW=`F1051130|SAFIA SIDDIQUI|PRIYANKA RANI|30/07/2026|4|ARUN GIRI|Amol Ranjan Jha|9911580406
+F1050966|Rida Zaidi|ZUHAIB HAIDER|27/07/2026|4|Azmi Haider Zaidi|Amol Ranjan Jha|8171767300
+F1051311|Isha Zaidi|ZUHAIB HAIDER|04/08/2026|4|Azmi Haider Zaidi|Amol Ranjan Jha|8864905906
+F1006706|NEHA VERMA|RITU DOGRA|24/11/2020|73|Preeti Raturi|Amol Ranjan Jha|8700738377
+F1050130|GAURI SHARMA|PRIME VENTURES|02/07/2026|5|Preeti Raturi|Amol Ranjan Jha|8178592765
+F1050381|Khyati Khyati|VEENA DEVI|10/07/2026|4|Preeti Raturi|Amol Ranjan Jha|7496862755
+F1051090|Pooja Malik|VEENA DEVI|29/07/2026|4|Preeti Raturi|Amol Ranjan Jha|8168210469
+F1047295|SWATI SUMAN SINGH|-|31/03/2026|8|Alok Kumar Mishra|Pradeep Kumar|8861989006
+F1047658|NASIM KHAN|-|25/04/2026|7|Alok Kumar Mishra|Pradeep Kumar|9911643442
+F1050056|Roshani Yadav|-|01/07/2026|5|Alok Kumar Mishra|Pradeep Kumar|9958920699
+F1050059|Giriraj A|-|01/07/2026|5|Alok Kumar Mishra|Pradeep Kumar|8433083918
+F1051042|Mayank Thakur|SUDESH PAWAR|28/07/2026|4|Alok Kumar Mishra|Pradeep Kumar|9761113284
+F1051043|Soban Singh|SUDESH PAWAR|28/07/2026|4|Alok Kumar Mishra|Pradeep Kumar|8054462114
+F8010712|SWATI TYAGI|SARITA GUPTA|14/07/2026|4|Kanishk Tyagi|Pradeep Kumar|7505200511
+F1047073|PRAVEEN KUMAR|-|24/03/2026|8|Kanishk Tyagi|Pradeep Kumar|9711047800
+F1047438|UMANSHI UMANSHI|SARITA GUPTA|11/04/2026|7|Kanishk Tyagi|Pradeep Kumar|9416614853
+F1046995|PRIYANSHU PRIYANSHU|RAJBEER SINGH|21/03/2026|8|Kanishk Tyagi|Pradeep Kumar|9311654952
+F1047551|NISHTHA NISHTHA|SARITA GUPTA|20/04/2026|7|Kanishk Tyagi|Pradeep Kumar|8527322154
+F1051082|NISHA SACHDEVA|RUDRAKSHI MAHROLIYA|29/07/2026|4|Km Anupama|Pradeep Kumar|7838928803
+F1048084|AADESH PRATAP SINGH|PANKAJ KUMAR VERMA|13/05/2026|6|Km Anupama|Pradeep Kumar|9838380610
+F1051323|SHIKHA SONI|ROHIT UPPAL|04/08/2026|4|Km Anupama|Pradeep Kumar|9654780341
+F8009294|HITESH GUGNANI|MEENA KUMARI|24/04/2026|7|Shikha Sahni|Pradeep Kumar|9999073839
+F1028780|VARSHA VARSHA|ASHOK KUMAR MANCHANDA|01/07/2025|17|Shikha Sahni|Pradeep Kumar|8882652648
+F1030274|PRIYANKA PRIYANKA|ASHOK KUMAR MANCHANDA|25/07/2025|16|Shikha Sahni|Pradeep Kumar|8447542146
+F1045996|ADITYA ARORA|-|16/02/2026|9|Shikha Sahni|Pradeep Kumar|7982337363
+F1047432|PIYUSH SHARMA|MEENA KUMARI|11/04/2026|7|Shikha Sahni|Pradeep Kumar|8527085009
+F1051904|Priya Priya|PINKY PODDAR|24/08/2026|3|Shikha Sahni|Pradeep Kumar|8178261724`;
+const ADV=RAW.split("\n").map(l=>{const p=l.split("|");return{code:p[0],name:p[1],mon:p[2],date:p[3],vin:p[4],bdm:p[5],abh:p[6],mob:p[7]}});
+const OPTS=["Call Connected","Will Join","Not Interested","Call Disconnected"];
+const KEY="risestar_remarks_v1";
+let store={};try{store=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
+let draft={...store},abhF="All";
+const $=id=>document.getElementById(id);
+const cls=v=>v?"s-"+v.replace(/ /g,"-"):"";
+
+function chips(){
+  const abhs=["All",...new Set(ADV.map(a=>a.abh))];
+  $("chips").innerHTML=abhs.map(a=>`<div class="chip ${a===abhF?"on":""}" data-a="${a}">${a}</div>`).join("");
+  document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{abhF=c.dataset.a;chips();render()});
+}
+function stats(){
+  const c=v=>ADV.filter(a=>store[a.code]===v).length;
+  $("stats").innerHTML=[["Total",ADV.length],["Connected",c(OPTS[0])],["Will Join",c(OPTS[1])],["Pending",ADV.filter(a=>!store[a.code]).length]]
+   .map(s=>`<div class="stat"><b>${s[1]}</b><small>${s[0]}</small></div>`).join("");
+}
+function render(){
+  const q=$("q").value.toLowerCase().trim();
+  const rows=ADV.filter(a=>(abhF==="All"||a.abh===abhF)&&(!q||Object.values(a).join(" ").toLowerCase().includes(q)));
+  $("list").innerHTML=rows.length?rows.map(a=>`
+  <div class="card ${cls(store[a.code])}">
+    <div class="top"><div><div class="nm">${a.name.toLowerCase()}</div><div class="code">${a.code}</div></div><div class="vin">⏱ ${a.vin} mo</div></div>
+    <div class="grid">
+      <div><small>Mentor</small>${a.mon==="-"?"—":a.mon}</div>
+      <div><small>Coding Date</small>${a.date}</div>
+      <div><small>BDM</small>${a.bdm}</div>
+      <div><small>ABH</small>${a.abh}</div>
+    </div>
+    <div class="act">
+      <a class="call" href="tel:+91${a.mob}">📞 ${a.mob}</a>
+      <select data-c="${a.code}"><option value="">Remarks…</option>${OPTS.map(o=>`<option ${draft[a.code]===o?"selected":""}>${o}</option>`).join("")}</select>
+    </div>
+  </div>`).join(""):'<div class="empty">No advisors found</div>';
+  document.querySelectorAll("select[data-c]").forEach(s=>s.onchange=()=>{draft[s.dataset.c]=s.value});
+  stats();
+}
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1800)}
+$("save").onclick=()=>{
+  Object.keys(draft).forEach(k=>{if(!draft[k])delete draft[k]});
+  store={...draft};
+  try{localStorage.setItem(KEY,JSON.stringify(store));toast("Remarks saved ✔")}catch(e){toast("Could not save")}
+  render();
+};
+$("csv").onclick=()=>{
+  const h="Advisor Code,Advisor Name,Mentor,Coding Date,Vintage Months,BDM,ABH,Mobile,Remarks";
+  const r=ADV.map(a=>[a.code,a.name,a.mon,a.date,a.vin,a.bdm,a.abh,a.mob,store[a.code]||""].map(x=>`"${x}"`).join(","));
+  const b=new Blob([h+"\n"+r.join("\n")],{type:"text/csv"});
+  const l=document.createElement("a");l.href=URL.createObjectURL(b);l.download="rise-star-remarks.csv";l.click();
+};
+$("q").oninput=render;
+chips();render();
+</script>
+</body>
+</html>
